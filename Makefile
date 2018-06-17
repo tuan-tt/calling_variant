@@ -22,6 +22,6 @@ src/%.o: src/%.c
 clean:
 	rm -f $(OBJECTS) $(EXEC)
 
-main.o: argument.h
-utils.o: utils.h
-argument.o: argument.h utils.h
+src/main.o: src/argument.h
+src/utils.o: src/utils.h
+src/argument.o: src/argument.h src/utils.h
