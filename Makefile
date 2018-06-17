@@ -10,7 +10,9 @@ OBJECTS = $(SOURCES:.c=.o)
 
 EXEC = cvar
 
-all: $(OBJECTS)
+all: $(EXEC)
+
+$(EXEC): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $(EXEC) $(LIBS)
 
 # To obtain object files
@@ -19,3 +21,7 @@ src/%.o: src/%.c
 
 clean:
 	rm -f $(OBJECTS) $(EXEC)
+
+main.o: argument.h
+utils.o: utils.h
+argument.o: argument.h utils.h
