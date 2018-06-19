@@ -1,2 +1,4 @@
 cvar
 *.o
+htslib/
+local/
