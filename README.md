@@ -1,5 +1,31 @@
-# calling_variant
+## Overview
 
+<b>cvar</b> is a tool that process NGS data to calling variant.
+
+## Install
+
+```shell
+git clone https://github.com/tuan-tt/calling_variant.git
+cd cvar
+bash build.sh
+make
+```
+
+## Usage
+
+<b>cvar</b> take raw reads (fastq format) as input. Then reads will be align to reference by BWA-MEM. After that we using sambaba to mark duplicate reads.
+Finally the BAM file will be used to calling variant.
+
+<b>cvar</b> will generate some file in output directory:
+
+- ${prefix}.bam : the BAM file after remomve duplicate reads.
+- ${prefix}.vcf : variant calling result.
+- ${prefix}.log : log file.
+
+
+## Contacts
+
+Please report any issues directly to the github issue tracker.
 
 
 ## Reference
