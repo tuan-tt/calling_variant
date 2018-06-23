@@ -67,16 +67,9 @@
  * Built-in macros function
  */
 
-#define __ALLOC(ptr, sz)	(ptr) = xmalloc(sizeof(*(ptr)) * (sz))
+#define __ALLOC(ptr, sz)	(ptr) = malloc(sizeof(*(ptr)) * (sz))
 
-#define __REALLOC(ptr, sz)	(ptr) = xrealloc((ptr), sizeof(*(ptr)) * (sz))
-
-/* push back val to ptr, ptr has sz element, realloc + 1 */
-#define __PUSH_BACK(ptr, sz, val) do {					       \
-	assert((sz) >= 0);						       \
-	__REALLOC((ptr), (sz) + 1);					       \
-	(ptr)[(sz)++] = (val);						       \
-} while(0)
+#define __REALLOC(ptr, sz)	(ptr) = realloc((ptr), sizeof(*(ptr)) * (sz))
 
 #define __FREE_AND_NULL(ptr) do {					       \
 	free(p);							       \
@@ -118,11 +111,11 @@ size_t xfread(void *ptr, size_t size, size_t nmemb, FILE *stream);
 /* check fwrite function write enough nmemb */
 size_t xfwrite(void *ptr, size_t size, size_t nmemb, FILE *stream);
 
-/* auto remove /n character if found */
-ssize_t xgetline(char **str, size_t *size, FILE *stream);
-
 /* get time */
 double realtime();
+
+/* get cpu time */
+double cputime();
 
 /* make directory if is not exist */
 void make_dir(const char *path);
@@ -138,9 +131,6 @@ char *str_concate(const char *s1, const char *s2);
 
 /* remove redundant / character */
 void normalize_dir(char *path);
-
-/* get size of all file from file_path */
-size_t fetch_size(const char **file_path, int n_file);
 
 /*
  * Global variable

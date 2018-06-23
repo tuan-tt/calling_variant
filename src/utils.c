@@ -38,16 +38,6 @@ size_t xfwrite(void *ptr, size_t size, size_t nmemb, FILE *stream)
 	return ret;
 }
 
-ssize_t xgetline(char **str, size_t *size, FILE *stream)
-{
-	ssize_t ret = getline(str, size, stream);
-	if (ret == 0 || ret == -1)
-		return ret;
-	if ((*str)[ret - 1] == '\n')
-		(*str)[--ret] = '\0';
-	return ret;
-}
-
 char *str_concate(const char *str1, const char *str2)
 {
 	size_t len1 = strlen(str1);
@@ -117,18 +107,10 @@ double realtime()
 	return tp.tv_sec + tp.tv_usec * 1e-6;
 }
 
-size_t fetch_size(const char **file_path, int n_file)
+double cputime()
 {
-	size_t ret = 0;
-	FILE *fid;
-	int i;
-	for (i = 0; i < n_file; ++i) {
-		fid = fopen(file_path[i], "rb");
-		if (!fid)
-			__ERROR("Unable to open file: %s", file_path[i]);
-		fseek(fid, 0L, SEEK_END);
-		ret += ftell(fid);
-		fclose(fid);
-	}
-	return ret;
+	struct rusage r;
+	getrusage(RUSAGE_SELF, &r);
+	return r.ru_utime.tv_sec + r.ru_stime.tv_sec + 1e-6 *
+	       (r.ru_utime.tv_usec + r.ru_stime.tv_usec);
 }
