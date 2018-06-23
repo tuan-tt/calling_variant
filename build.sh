@@ -20,3 +20,10 @@ cd htslib && autoheader && autoconf
 make
 make install
 cd ../
+
+# build sambamba
+if [ ! -f sambamba ]; then
+    wget -O sambamba.tar.gz https://github.com/biod/sambamba/releases/download/v0.6.7/sambamba_v0.6.7_linux.tar.bz2
+    tar -xvjf sambamba.tar.gz
+    rm -r sambamba.tar.gz
+fi

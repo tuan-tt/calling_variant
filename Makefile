@@ -16,15 +16,9 @@ all: $(EXEC)
 
 $(EXEC): $(OBJECTS)
 	$(CC) $(OBJECTS) $(HTSLIB) -o $(EXEC) $(LIBS)
+	rm -f $(OBJECTS)
 
 # To obtain object files
 src/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-clean:
-	rm -f $(OBJECTS) $(EXEC)
-
-src/main.o: src/argument.h src/bam.h
-src/utils.o: src/utils.h
-src/argument.o: src/argument.h src/utils.h
-src/bam.o: src/bam.h

@@ -2,3 +2,5 @@ cvar
 *.o
 htslib/
 local/
+sambamba
+.vscode/
