@@ -67,7 +67,9 @@
  * Built-in macros function
  */
 
-#define __ALLOC(ptr, sz)	(ptr) = malloc(sizeof(*(ptr)) * (sz))
+#define __MALLOC(ptr, sz)	(ptr) = malloc(sizeof(*(ptr)) * (sz))
+
+#define __CALLOC(ptr, sz)	(ptr) = calloc(sz, sizeof(*(ptr)))
 
 #define __REALLOC(ptr, sz)	(ptr) = realloc((ptr), sizeof(*(ptr)) * (sz))
 

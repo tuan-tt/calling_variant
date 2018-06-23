@@ -1,6 +1,6 @@
 #include "ref.h"
 
-static int64_t *ref_len;
+static uint32_t *ref_len;
 static char **ref_name;
 static char **ref;
 static int n_ref;
@@ -22,7 +22,7 @@ void ref_load(char *file_path)
 
 	double prev_time = realtime();
 	int id, num;
-	int64_t pos = 0;
+	uint32_t pos = 0;
 	size_t len = 0;
 	char *s = NULL, c;
 	FILE *fi = fopen(file_path, "r");
@@ -64,7 +64,7 @@ void ref_load(char *file_path)
 		if (s[num - 1] == '\n')
 			--num;
 		if (pos + num + 1 >= ref_len[id]) {
-			int64_t temp = pos + num + 1;
+			uint32_t temp = pos + num + 1;
 			ref_len[id] = __round_up_32(temp) * 2;
 			__REALLOC(ref[id], ref_len[id]);
 		}
