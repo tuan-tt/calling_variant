@@ -14,7 +14,8 @@
 #define FLAG_READ1 		0x040	/* Read is first read */
 #define FLAG_READ2 		0x080	/* Read is second read */
 #define FLAG_NOT_PRI		0x100	/* Alginment is not primary */
-#define FLAG_DUPLICATE 		0x400	/* Read is pcr or duplicated */
+#define FLAG_FAIL		0x200	/* Read fails platform/vendor quality checks */
+#define FLAG_DUPLICATE 		0x400	/* Read is PCR or optical duplicate */
 #define FLAG_SUPPLEMENT		0x800	/* Alignment is supplementary */
 
 struct bam_inf_t {
