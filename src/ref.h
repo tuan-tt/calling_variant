@@ -3,8 +3,16 @@
 
 #include "utils.h"
 
-char **ref_load(char *file_path);
+void ref_load(char *file_path);
 
-void ref_destroy(char **ref);
+void ref_destroy();
+
+int ref_getlen(int id);
+
+int ref_getid(char *s);
+
+char *ref_getseq(int id);
+
+char *ref_getname(int id);
 
 #endif /* _REF_H_ */
