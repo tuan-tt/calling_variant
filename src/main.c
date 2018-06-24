@@ -3,6 +3,9 @@
 #include "ref.h"
 
 static pthread_mutex_t lock_id = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t lock_verbose = PTHREAD_MUTEX_INITIALIZER;
+
+static double real_time, cpu_time;
 
 static void *process_pool(void *data)
 {
@@ -21,12 +24,16 @@ static void *process_pool(void *data)
 		pthread_mutex_unlock(&lock_id);
 
 		read_bam_target(bam_inf, id);
+
+		pthread_mutex_lock(&lock_verbose);
+		__VERBOSE("\rDone %d targets!", id + 1);
+		pthread_mutex_unlock(&lock_verbose);
 	} while (1);
 }
 
 static void read_bam(struct bam_inf_t *bam_inf)
 {
-	__VERBOSE("Calculating ... \n");
+	__VERBOSE("Processing ... \n");
 
 	int i;
 
@@ -42,18 +49,41 @@ static void read_bam(struct bam_inf_t *bam_inf)
 	for (i = 0; i < args.n_thread; ++i)
 		pthread_join(pthr[i], NULL);
 
+	__VERBOSE("\n");
 	free(pthr);
 	pthread_attr_destroy(&attr);
+}
+
+void show_general_info(int argc, char *argv[])
+{
+	int i;
+
+	__VERBOSE("Version: %s\n", VERSION);
+	__VERBOSE("CMD: ");
+
+	for (i = 0; i < argc; ++i) {
+		__VERBOSE("%s", argv[i]);
+		if (i == argc - 1)
+			__VERBOSE("\n");
+		else
+			__VERBOSE(" ");
+	}
+
+	__VERBOSE("Real time: %.1f sec; CPU: %.1f sec\n",
+		realtime() - real_time, cputime() - cpu_time);
 }
 
 int main(int argc, char *argv[])
 {
 	struct bam_inf_t bam_inf;
+	real_time = realtime();
+	cpu_time = cputime();
 
 	get_args(argc, argv);
 	ref_load(args.reference);	
 	bam_inf_init(&bam_inf, args.in_bam);
 	read_bam(&bam_inf);
+	show_general_info(argc, argv);
 
 	return 0;
 }

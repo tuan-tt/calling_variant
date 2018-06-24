@@ -4,3 +4,4 @@ htslib/
 local/
 sambamba
 .vscode/
+test/

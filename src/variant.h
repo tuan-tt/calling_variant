@@ -9,4 +9,6 @@ struct var_cand_t {
 	char nt4;
 };
 
+void variant_process(struct var_cand_t *cand_list, int cand_sz, int ref_pos, char ref_nt);
+
 #endif /* _VARIANT_H_ */

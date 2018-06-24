@@ -74,8 +74,8 @@
 #define __REALLOC(ptr, sz)	(ptr) = realloc((ptr), sizeof(*(ptr)) * (sz))
 
 #define __FREE_AND_NULL(ptr) do {					       \
-	free(p);							       \
-	(p) = NULL;							       \
+	free(ptr);							       \
+	(ptr) = NULL;							       \
 } while (0)
 
 #define __VERBOSE(fmt, args...) fprintf(stderr, fmt, ##args)

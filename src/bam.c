@@ -3,8 +3,6 @@
 #include "queue.h"
 #include "variant.h"
 
-static char bnt4[] = {0, 'A', 'C', 0, 'G', 0, 0, 0, 'T', 0, 0, 0, 0, 0, 0, 'N'};
-
 void bam_inf_init(struct bam_inf_t *bam_inf, const char *file_path)
 {
 	bam_inf->bam_path = file_path;
@@ -40,102 +38,48 @@ static bam1_t *get_nxt_bam1(samFile *in_bam_f, hts_itr_t *iter)
 	}
 }
 
-struct var_cand_t check_contain(bam1_t *b, uint32_t tag_pos)
-{
-	uint32_t *cigar = bam_get_cigar(b);
-	uint32_t r_pos = b->core.pos;
-	uint8_t *seq = bam_get_seq(b);
-	uint8_t *qual = bam_get_qual(b);
-	struct var_cand_t ret;
-	int i, j, s_pos;
-
-	for (i = s_pos = 0; i < b->core.n_cigar; ++i) {
-		int oplen = bam_cigar_oplen(cigar[i]);
-		char opchr = bam_cigar_opchr(cigar[i]);
-		if (r_pos > tag_pos) {
-			ret.nt4 = '\0';
-			return ret;
-		}
-		if (opchr == 'N') {
-			r_pos += oplen;
-		} else if (opchr == 'D') {
-			r_pos += oplen;
-		} else if (opchr == 'I') {
-			s_pos += oplen;
-		} else if (opchr == 'S') {
-			s_pos += oplen;
-		} else if (opchr == 'M') {
-			for (j = 0; j < oplen; ++j) { 
-				if (r_pos == tag_pos) {
-					ret.nt4 = bnt4[bam_seqi(seq, s_pos)];
-					ret.mapq = b->core.qual;
-					ret.baseq = qual[s_pos];
-					return ret;	
-				}
-				r_pos++;
-				s_pos++;
-			}
-		} else {
-			__VERBOSE("%c\n", opchr);
-			assert(false);
-		}
-	}
-
-	ret.nt4 = '\0';
-	return ret;
-}
-
 void read_bam_target(struct bam_inf_t *bam_inf, int id)
 {
-	__VERBOSE("%s\n", bam_inf->b_hdr->target_name[id]);
+	/* get target ref info */
 	int ref_id = ref_getid(bam_inf->b_hdr->target_name[id]);
 	uint32_t target_len = bam_inf->b_hdr->target_len[id];
 	char *ref_seq = ref_getseq(ref_id);
 	assert(ref_getlen(ref_id) == target_len);
+
+	/* init bam query */
 	samFile *in_bam_f = sam_open(bam_inf->bam_path, "rb");
 	hts_itr_t *iter = sam_itr_queryi(bam_inf->bam_i, id, 1, target_len);
-	bam1_t *b = bam_init1();
+	bam1_t *b;
+	uint32_t tag_pos;
+
+	/* init queue & cand list */
 	struct queue_t queue;
 	queue_init(&queue);
-	uint32_t tag_pos;
-	int i;
 
 	b = get_nxt_bam1(in_bam_f, iter);
 	if (b == NULL)
 		return;
 
 	for (tag_pos = 0; tag_pos < target_len; ++tag_pos) {
-		struct var_cand_t temp;
-		struct var_cand_t *cand_list;
-		__CALLOC(cand_list, 32);
-		int cand_sz = 0, alloc_sz = 32;
-
-		while (b && b->core.pos <= tag_pos) {
+		/* get new bam */
+		while (b && b->core.pos == tag_pos) {
 			queue_push(&queue, b);
+			bam_destroy1(b);
 			b = get_nxt_bam1(in_bam_f, iter);
 			if (b == NULL)
 				break;
 		}
-		for (i = queue.head; i <= queue.tail; ++i) {
-			if (i >= queue.sz)
-				i = 0;
-			temp = check_contain(queue.val[i], tag_pos);
-			if (temp.nt4 == '\0')
-				continue;
-			if (cand_sz == alloc_sz) {
-				alloc_sz <<= 1;
-				__REALLOC(cand_list, alloc_sz);
-				memset(cand_list, 0, (alloc_sz >> 1)
-					* sizeof(struct var_cand_t));
-			}
-			cand_list[cand_sz++] = temp;
-		}
 
-		if (cand_sz > 0) {
-			/* calling variant process */
-		}
+		/* get candidate list and process */
+		if (queue.sz[queue.it] > 0)
+			variant_process(queue.val[queue.it], queue.sz[queue.it],
+					tag_pos, nt4_char[nt4_table[ref_seq[tag_pos]]]);
+
+		queue_move(&queue);
 	}
 
+	assert(b == NULL);
+	queue_destroy(&queue);
 	sam_itr_destroy(iter);
 	bam_destroy1(b);
 	sam_close(in_bam_f);

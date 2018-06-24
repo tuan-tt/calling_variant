@@ -28,7 +28,7 @@ void get_args(int argc, char *argv[])
 	int c, i, n;
 	args.out_dir = "cvar_out";
 	args.prefix = "output";
-	args.n_thread = 4;
+	args.n_thread = 1;
 
 	if (argc < 3) {
 		print_usage();

@@ -17,7 +17,6 @@ static void cut_off_name(char *s)
 
 void ref_load(char *file_path)
 {
-	char **ref = NULL;
 	__VERBOSE("Loading reference ... ");
 
 	double prev_time = realtime();
