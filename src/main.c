@@ -6,6 +6,7 @@ static pthread_mutex_t lock_id = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t lock_verbose = PTHREAD_MUTEX_INITIALIZER;
 
 static double real_time, cpu_time;
+static int done_cnt;
 
 static void *process_pool(void *data)
 {
@@ -26,7 +27,8 @@ static void *process_pool(void *data)
 		read_bam_target(bam_inf, id);
 
 		pthread_mutex_lock(&lock_verbose);
-		__VERBOSE("\rDone %d targets!", id + 1);
+		++done_cnt;
+		__VERBOSE("\rDone %d targets!", done_cnt);
 		pthread_mutex_unlock(&lock_verbose);
 	} while (1);
 }
@@ -58,6 +60,7 @@ void show_general_info(int argc, char *argv[])
 {
 	int i;
 
+	__VERBOSE("\n");
 	__VERBOSE("Version: %s\n", VERSION);
 	__VERBOSE("CMD: ");
 
