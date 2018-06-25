@@ -3,8 +3,6 @@ local/
 .vscode/
 test/
 bwa/
+samtools/
 bin/
-sambamba
-cvar
-bwa
 *.o

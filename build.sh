@@ -17,10 +17,21 @@ git submodule update --init --recursive
 
 # build htslib
 DIR="$(pwd)/local/"
-cd htslib && autoheader && autoconf
+cd htslib
+autoheader
+autoconf
 ./configure --prefix=${DIR} --disable-lzma --disable-libcurl --disable-bz2
 make
 make install
+cd ../
+
+# build samtools
+cd samtools
+autoheader
+autoconf -Wno-syntax
+./configure --without-curses
+make
+cp samtools ../bin/
 cd ../
 
 # build bwa
