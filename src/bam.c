@@ -73,7 +73,7 @@ void read_bam_target(struct bam_inf_t *bam_inf, int id)
 		/* get candidate list and process */
 		if (queue.sz[queue.it] > 0)
 			variant_process(queue.val[queue.it], queue.sz[queue.it],
-					tag_pos, nt4_char[nt4_table[ref_seq[tag_pos]]]);
+					tag_pos, nt4_char[nt4_table[ref_seq[tag_pos]]], id);
 
 		queue_move(&queue);
 	}

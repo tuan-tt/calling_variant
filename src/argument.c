@@ -73,4 +73,7 @@ void get_args(int argc, char *argv[])
 
 	/* FIXME: check could not create output directory & add attribute */
 	make_dir(args.out_dir);
+	__MALLOC(args.temp, strlen(args.out_dir) + strlen(args.prefix) + 7);
+	sprintf(args.temp, "%s/%s_tmp/", args.out_dir, args.prefix);
+	make_dir(args.temp);
 }

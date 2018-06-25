@@ -1,6 +1,7 @@
 #include "argument.h"
 #include "bam.h"
 #include "ref.h"
+#include "variant.h"
 
 static pthread_mutex_t lock_id = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t lock_verbose = PTHREAD_MUTEX_INITIALIZER;
@@ -74,6 +75,7 @@ void show_general_info(int argc, char *argv[])
 
 	__VERBOSE("Real time: %.1f sec; CPU: %.1f sec\n",
 		realtime() - real_time, cputime() - cpu_time);
+	__VERBOSE("\n");
 }
 
 int main(int argc, char *argv[])
@@ -83,9 +85,12 @@ int main(int argc, char *argv[])
 	cpu_time = cputime();
 
 	get_args(argc, argv);
-	ref_load(args.reference);	
+	ref_load(args.reference);
 	bam_inf_init(&bam_inf, args.in_bam);
+	variant_init(bam_inf.b_hdr->n_targets);
 	read_bam(&bam_inf);
+	variant_merge(bam_inf.b_hdr->n_targets, &bam_inf);
+	variant_destroy(bam_inf.b_hdr->n_targets);
 	show_general_info(argc, argv);
 
 	return 0;

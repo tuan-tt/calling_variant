@@ -68,11 +68,14 @@ void queue_push(struct queue_t *q, bam1_t *b)
 		} else if (opchr == 'S') {
 			s_pos += oplen;
 		} else if (opchr == 'M') {
-			for (j = 0; j < oplen; ++j) { 
+			for (j = 0; j < oplen; ++j) {
 				int *sz;
+				/* skip base N */
+				if (bam_seqi(seq, s_pos) == 15)
+					continue;
 				ret.nt4 = bnt4[bam_seqi(seq, s_pos)];
-				ret.mapq = b->core.qual;
-				ret.baseq = qual[s_pos];
+				/* base quality could not exceed mapping quality */
+				ret.baseq = __min(qual[s_pos], b->core.qual);
 				check_bound(q, r_pos);
 				sz = q->sz + r_pos;
 				__REALLOC(q->val[r_pos], *sz + 1);

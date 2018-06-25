@@ -1,7 +1,7 @@
 # Declaration of variables
 CC = gcc
 
-LIBS = -pthread -Llocal/lib -lz -Ilocal/include
+LIBS = -pthread -Llocal/lib -lz -Ilocal/include -lm
 
 CFLAGS = -Wfatal-errors -Wall -O2 -Wno-unused-result -Wno-char-subscripts
 

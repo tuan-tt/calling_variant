@@ -11,6 +11,7 @@ struct prog_args {
 	char *reference;
 	char *out_dir;
 	char *prefix;
+	char *temp;
 };
 
 void print_usage();

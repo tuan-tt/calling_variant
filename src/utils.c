@@ -21,7 +21,7 @@ int8_t nt4_table[256] = {
 
 char *nt4_char = "ACGTN";
 char *rev_nt4_char = "TGCAN";
-
+int debug[100];
 size_t xfread(void *ptr, size_t size, size_t nmemb, FILE *stream)
 {
 	size_t ret = fread(ptr, size, nmemb, stream);
@@ -113,4 +113,23 @@ double cputime()
 	getrusage(RUSAGE_SELF, &r);
 	return r.ru_utime.tv_sec + r.ru_stime.tv_sec + 1e-6 *
 	       (r.ru_utime.tv_usec + r.ru_stime.tv_usec);
+}
+
+void append_file(const char *dest, const char *src, int offset)
+{
+	FILE *fi_dest = fopen(dest, "r+");
+	FILE *fi_src = fopen(src, "r");
+	assert(fi_dest);
+	assert(fi_src);
+	fseek(fi_dest, offset, SEEK_END);
+	while (1) {
+		char buf[MBSZ];
+		memset(buf, 0, MBSZ);
+		int ret = fread(buf, 1, MBSZ, fi_src);
+		xfwrite(buf, 1, ret, fi_dest);
+		if (ret < MBSZ)
+			break;
+	}
+	fclose(fi_dest);
+	fclose(fi_src);
 }

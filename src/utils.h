@@ -37,6 +37,7 @@
 #define MASK32			4294967295ULL
 
 #define BUFSZ			4096
+#define MBSZ			1048576
 
 #define THREAD_STACK_SIZE	16777216
 
@@ -134,11 +135,13 @@ char *str_concate(const char *s1, const char *s2);
 /* remove redundant / character */
 void normalize_dir(char *path);
 
+void append_file(const char *dest, const char *src, int offset);
+
 /*
  * Global variable
  */
 
 extern int8_t nt4_table[256];
 extern char *nt4_char, *rev_nt4_char;
-
+extern int debug[100];
 #endif /* _UTILS_H_ */
