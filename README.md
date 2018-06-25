@@ -13,20 +13,24 @@ make
 
 ## Usage
 
-<b>cvar</b> take raw reads (fastq format) as input. Then reads will be align to reference by BWA-MEM. After that we using sambaba to mark duplicate reads.
-Finally the BAM file will be used to calling variant.
+```shell
+<b>cvar</b> take BAM file as input. Then BAM file must be sorted and be indexed.
+Recommend used BWA-MEM for align reads to reference.
 
-<b>cvar</b> will generate some file in output directory:
+This tool will generate ${prefix}.vcf in output directory
+```
 
-- ${prefix}.bam : the BAM file after remomve duplicate reads.
-- ${prefix}.vcf : variant calling result.
-- ${prefix}.log : log file.
+```shell
+Pipeline to calling variant from raw reads.
 
+bin/bwa mem -t 32 ref.fa read1.fq [read2.fq] | samtools view -Sb | samtools sort -@ 32 > $out_dir/$prefix.sorted.bam
+bin/sambamba markdup -r -t 32 $out_dir/$prefix.sorted.bam $out_dir/prefix.mardup.sorted.bam
+bin/cvar -t 32 -p $prefix -o $out_dir ref.fa $out_dir/prefix.mardup.sorted.bam
+```
 
 ## Contacts
 
 Please report any issues directly to the github issue tracker.
-
 
 ## Reference
 

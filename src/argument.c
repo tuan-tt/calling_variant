@@ -17,9 +17,7 @@ void print_usage()
 	__VERBOSE("  -p STR                prefix of output (default: 'output')\n");
 	__VERBOSE("  -h                    print help usage and exit\n");
 	__VERBOSE("\n");
-	__VERBOSE("This tool will generate some files in output directory:\n");
-	__VERBOSE("  ${prefix}.vcf         variant calling result\n");
-	__VERBOSE("  ${prefix}.log         log file\n");
+	__VERBOSE("This tool will generate ${prefix}.vcf in output directory.\n");
 	__VERBOSE("\n");
 }
 
