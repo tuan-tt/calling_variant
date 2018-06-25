@@ -67,10 +67,10 @@ void variant_merge(int n_target, struct bam_inf_t *bam_inf)
 			bam_inf->b_hdr->target_name[i], bam_inf->b_hdr->target_len[i]);
 	}
 
-	fprintf(fo_res, "##INFO=<ID=RO,Number=1,Type=Integer,Description=\"Count of full observations of the reference haplotype.\">\n");
-	fprintf(fo_res, "##INFO=<ID=AO,Number=A,Type=Integer,Description=\"Count of full observations of this alternate haplotype.\">\n");
-	fprintf(fo_res, "##INFO=<ID=QR,Number=1,Type=Integer,Description=\"Reference allele quality sum in phred\">\n");
-	fprintf(fo_res, "##INFO=<ID=QA,Number=A,Type=Integer,Description=\"Alternate allele quality sum in phred\">\n");
+	fprintf(fo_res, "##FORMAT=<ID=RO,Number=1,Type=Integer,Description=\"Count of full observations of the reference haplotype.\">\n");
+	fprintf(fo_res, "##FORMAT=<ID=AO,Number=A,Type=Integer,Description=\"Count of full observations of this alternate haplotype.\">\n");
+	fprintf(fo_res, "##FORMAT=<ID=QR,Number=1,Type=Integer,Description=\"Reference allele quality sum in phred\">\n");
+	fprintf(fo_res, "##FORMAT=<ID=QA,Number=A,Type=Integer,Description=\"Alternate allele quality sum in phred\">\n");
 	fprintf(fo_res, "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n");
 	fprintf(fo_res, "##FORMAT=<ID=DP,Number=1,Type=Integer,Description=\"Read Depth\">\n");
 	fprintf(fo_res, "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tunknown\n");
