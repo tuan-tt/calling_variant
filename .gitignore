@@ -1,7 +1,10 @@
-cvar
-*.o
 htslib/
 local/
-sambamba
 .vscode/
 test/
+bwa/
+bin/
+sambamba
+cvar
+bwa
+*.o

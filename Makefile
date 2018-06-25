@@ -15,7 +15,7 @@ EXEC = cvar
 all: $(EXEC)
 
 $(EXEC): $(OBJECTS)
-	$(CC) $(OBJECTS) $(HTSLIB) -o $(EXEC) $(LIBS)
+	$(CC) $(OBJECTS) $(HTSLIB) -o bin/$(EXEC) $(LIBS)
 	rm -f $(OBJECTS)
 
 # To obtain object files

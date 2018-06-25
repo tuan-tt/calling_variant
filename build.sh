@@ -9,6 +9,8 @@ if [ "$BASH_VERSION" = '' ]; then
     exit 1
 fi
 
+mkdir -p bin/
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd ${DIR}
 git submodule update --init --recursive
@@ -21,9 +23,19 @@ make
 make install
 cd ../
 
+# build bwa
+cd bwa
+make
+cp bwa ../bin/
+cd ../
+
 # build sambamba
-if [ ! -f sambamba ]; then
+if [ ! -f bin/sambamba ]; then
     wget -O sambamba.tar.gz https://github.com/biod/sambamba/releases/download/v0.6.7/sambamba_v0.6.7_linux.tar.bz2
     tar -xvjf sambamba.tar.gz
     rm -r sambamba.tar.gz
+    mv sambamba bin/
 fi
+
+# build cvar
+make
