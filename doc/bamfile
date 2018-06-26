@@ -1,4 +1,14 @@
-Giới thiệu về định dạng BAM
-Tổng quan
++Giới thiệu về định dạng BAM
++Định dạng SAM
++Chuỗi CIGAR
++Ưu điểm
++Nhược điểm
+Dữ liểu 
++Tổng quan
+BAM là dạng nén của SAM file cho phép việc lưu trữ các thông tin trở nên gọn nhẹ hơn đồng thời vẫn đảm bảo khả năng truy suất vào các vùng thời gian nhanh nhất có thể.
+Để hỗ trợ cho các ưu điểm trên thì BAM file đã kết hợp định dạng BGZF cùng với cơ chế chỉ mục đi kèm.
++Nội dung chi tiết file BAM
+BAM là file được nén bởi định dạng BGZF. Tất cả các số nhiều hơn 1 byte trong file BAM đều được biểu diễn theo little endian.
+[images/Bam_table.png]
 
 
