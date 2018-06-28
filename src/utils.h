@@ -135,7 +135,7 @@ char *str_concate(const char *s1, const char *s2);
 /* remove redundant / character */
 void normalize_dir(char *path);
 
-void append_file(const char *dest, const char *src, int offset);
+void append_file(const char *dest, const char *src);
 
 /*
  * Global variable

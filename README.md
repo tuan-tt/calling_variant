@@ -40,3 +40,4 @@ https://www.nature.com/articles/ng.806
 https://samtools.github.io/hts-specs/SAMv1.pdf
 https://samtools.github.io/hts-specs/VCFv4.2.pdf
 https://software.broadinstitute.org/gatk/documentation/
+https://vi.wikipedia.org/wiki/DNA

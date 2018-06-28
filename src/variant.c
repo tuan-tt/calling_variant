@@ -81,7 +81,7 @@ void variant_merge(int n_target, struct bam_inf_t *bam_inf)
 	for (i = 0; i < n_target; ++i) {
 		char temp_path[BUFSZ];
 		sprintf(temp_path, "%s/%d.vcf", args.temp, i);
-		append_file(file_path, temp_path, 0);
+		append_file(file_path, temp_path);
 	}
 }
 
@@ -99,11 +99,7 @@ static void output_result(int id, struct var_result_t *result)
 		fprintf(fo[id], "\t");
 
 	/* variant phred */
-	fprintf(fo[id], "%.1f", result->phred[0]);
-	if (result->n_var == 2)
-		fprintf(fo[id], ",%.1f\t", result->phred[1]);
-	else
-		fprintf(fo[id], "\t");
+	fprintf(fo[id], "%.1f\t", result->phred[0]);
 
 	/* additional info */
 	fprintf(fo[id], ".\t.\tGT:DP:RO:QR:AO:QA\t");
@@ -140,6 +136,7 @@ static void output_result(int id, struct var_result_t *result)
 
 static void normalize_result(struct var_result_t *result)
 {
+	double total_sum, min_ratio, xratio, yratio;
 	int i;
 	if (result->genotype > 0) {
 		/* if has bb case, keep bb case only */
@@ -150,6 +147,21 @@ static void normalize_result(struct var_result_t *result)
 				result->cnt[i] = result->cnt[result->n_var];
 				result->sum[i] = result->sum[result->n_var];
 				result->var_nt[i] = result->var_nt[result->n_var];
+			}
+		}
+		if (result->n_var == 2) {
+			total_sum = result->sum[0] + result->sum[1];
+			xratio = result->sum[0] / total_sum;
+			yratio = result->sum[1] / total_sum;
+			min_ratio = __min(xratio, yratio);
+			if (min_ratio <= 0.1) {
+				result->n_var--;
+				if (xratio < yratio) {
+					result->phred[i] = result->phred[result->n_var];
+					result->cnt[i] = result->cnt[result->n_var];
+					result->sum[i] = result->sum[result->n_var];
+					result->var_nt[i] = result->var_nt[result->n_var];
+				}
 			}
 		}
 	} else {

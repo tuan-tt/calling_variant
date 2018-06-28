@@ -115,21 +115,18 @@ double cputime()
 	       (r.ru_utime.tv_usec + r.ru_stime.tv_usec);
 }
 
-void append_file(const char *dest, const char *src, int offset)
+void append_file(const char *dest, const char *src)
 {
-	FILE *fi_dest = fopen(dest, "r+");
+	FILE *fi_dest = fopen(dest, "a");
 	FILE *fi_src = fopen(src, "r");
 	assert(fi_dest);
 	assert(fi_src);
-	fseek(fi_dest, offset, SEEK_END);
-	while (1) {
-		char buf[MBSZ];
-		memset(buf, 0, MBSZ);
-		int ret = fread(buf, 1, MBSZ, fi_src);
-		xfwrite(buf, 1, ret, fi_dest);
-		if (ret < MBSZ)
-			break;
+	char *s = NULL;
+	size_t size = 0;
+	while (getline(&s, &size, fi_src) != EOF) {
+		fprintf(fi_dest, "%s", s);
 	}
+	free(s);
 	fclose(fi_dest);
 	fclose(fi_src);
 }
